@@ -402,6 +402,10 @@
       "name": "Add bonus time",
       "description": "Gives additional online time for today (negative values take it away again).",
       "fields": {
+        "device_id": {
+          "name": "Profile",
+          "description": "Parental control profile (a user or the standard profile)."
+        },
         "minutes": {
           "name": "Minutes",
           "description": "Bonus minutes for today."
@@ -410,12 +414,22 @@
     },
     "reset_bonus_time": {
       "name": "Reset bonus time",
-      "description": "Removes today's bonus time."
+      "description": "Removes today's bonus time.",
+      "fields": {
+        "device_id": {
+          "name": "Profile",
+          "description": "Parental control profile (a user or the standard profile)."
+        }
+      }
     },
     "set_usage_limit": {
       "name": "Set daily time limit",
       "description": "Sets the maximum online time per day.",
       "fields": {
+        "device_id": {
+          "name": "Profile",
+          "description": "Parental control profile (a user or the standard profile)."
+        },
         "minutes": {
           "name": "Minutes",
           "description": "Maximum online time per day."
@@ -434,6 +448,10 @@
       "name": "Set online times",
       "description": "Replaces the time windows in which internet access is allowed.",
       "fields": {
+        "device_id": {
+          "name": "Profile",
+          "description": "Parental control profile (a user or the standard profile)."
+        },
         "times": {
           "name": "Time windows",
           "description": "List of windows with day (monday..sunday, weekdays, weekend), start and end (HH:MM). An empty list removes all windows."
@@ -448,6 +466,10 @@
       "name": "Set blocked categories",
       "description": "Sets which parental control lists (e.g. gambling, social networks) are blocked for the profile.",
       "fields": {
+        "device_id": {
+          "name": "Profile",
+          "description": "Parental control profile (a user or the standard profile)."
+        },
         "filter_lists": {
           "name": "Filter lists",
           "description": "Names (German or English) or IDs of the lists to block. Replaces the current selection."
@@ -482,7 +504,13 @@
     },
     "delete_user": {
       "name": "Delete user",
-      "description": "Deletes a user and the user's profile. Assigned devices go back to the standard profile."
+      "description": "Deletes a user and the user's profile. Assigned devices go back to the standard profile.",
+      "fields": {
+        "device_id": {
+          "name": "Profile",
+          "description": "Parental control profile (a user or the standard profile)."
+        }
+      }
     }
   },
   "selector": {

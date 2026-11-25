@@ -402,6 +402,10 @@
       "name": "Bonuszeit hinzufügen",
       "description": "Gibt zusätzliche Online-Zeit für heute (negative Werte ziehen sie wieder ab).",
       "fields": {
+        "device_id": {
+          "name": "Profil",
+          "description": "Jugendschutzprofil (ein Benutzer oder das Standard-Profil)."
+        },
         "minutes": {
           "name": "Minuten",
           "description": "Bonusminuten für heute."
@@ -410,12 +414,22 @@
     },
     "reset_bonus_time": {
       "name": "Bonuszeit zurücksetzen",
-      "description": "Entfernt die heutige Bonuszeit."
+      "description": "Entfernt die heutige Bonuszeit.",
+      "fields": {
+        "device_id": {
+          "name": "Profil",
+          "description": "Jugendschutzprofil (ein Benutzer oder das Standard-Profil)."
+        }
+      }
     },
     "set_usage_limit": {
       "name": "Tageslimit setzen",
       "description": "Legt die maximale Online-Zeit pro Tag fest.",
       "fields": {
+        "device_id": {
+          "name": "Profil",
+          "description": "Jugendschutzprofil (ein Benutzer oder das Standard-Profil)."
+        },
         "minutes": {
           "name": "Minuten",
           "description": "Maximale Online-Zeit pro Tag."
@@ -434,6 +448,10 @@
       "name": "Online-Zeiten setzen",
       "description": "Ersetzt die Zeitfenster, in denen das Internet erlaubt ist.",
       "fields": {
+        "device_id": {
+          "name": "Profil",
+          "description": "Jugendschutzprofil (ein Benutzer oder das Standard-Profil)."
+        },
         "times": {
           "name": "Zeitfenster",
           "description": "Liste von Zeitfenstern mit day (monday..sunday, weekdays, weekend), start und end (HH:MM). Eine leere Liste entfernt alle Zeitfenster."
@@ -448,6 +466,10 @@
       "name": "Gesperrte Kategorien setzen",
       "description": "Legt fest, welche Jugendschutz-Listen (z. B. Glücksspiel, Soziale Netzwerke) für das Profil gesperrt sind.",
       "fields": {
+        "device_id": {
+          "name": "Profil",
+          "description": "Jugendschutzprofil (ein Benutzer oder das Standard-Profil)."
+        },
         "filter_lists": {
           "name": "Filterlisten",
           "description": "Namen (deutsch oder englisch) oder IDs der zu sperrenden Listen. Ersetzt die bisherige Auswahl."
@@ -482,7 +504,13 @@
     },
     "delete_user": {
       "name": "Benutzer löschen",
-      "description": "Löscht einen Benutzer und sein Profil. Zugeordnete Geräte fallen auf das Standard-Profil zurück."
+      "description": "Löscht einen Benutzer und sein Profil. Zugeordnete Geräte fallen auf das Standard-Profil zurück.",
+      "fields": {
+        "device_id": {
+          "name": "Profil",
+          "description": "Jugendschutzprofil (ein Benutzer oder das Standard-Profil)."
+        }
+      }
     }
   },
   "selector": {

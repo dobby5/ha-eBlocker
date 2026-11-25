@@ -114,11 +114,15 @@ remove_filter_list:
       domain: switch
 
 add_bonus_time:
-  target:
-    device:
-      integration: eblocker
-      model: Parental control profile
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          multiple: true
+          filter:
+            - integration: eblocker
+              model: Parental control profile
     minutes:
       required: true
       example: 30
@@ -131,17 +135,26 @@ add_bonus_time:
           mode: box
 
 reset_bonus_time:
-  target:
-    device:
-      integration: eblocker
-      model: Parental control profile
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          multiple: true
+          filter:
+            - integration: eblocker
+              model: Parental control profile
 
 set_usage_limit:
-  target:
-    device:
-      integration: eblocker
-      model: Parental control profile
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          multiple: true
+          filter:
+            - integration: eblocker
+              model: Parental control profile
     minutes:
       required: true
       example: 90
@@ -173,11 +186,15 @@ set_usage_limit:
         boolean:
 
 set_online_times:
-  target:
-    device:
-      integration: eblocker
-      model: Parental control profile
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          multiple: true
+          filter:
+            - integration: eblocker
+              model: Parental control profile
     times:
       required: true
       example: '[{"day": "weekdays", "start": "07:00", "end": "20:00"}, {"day": "weekend", "start": "08:00", "end": "21:30"}]'
@@ -190,11 +207,15 @@ set_online_times:
         boolean:
 
 set_blocked_lists:
-  target:
-    device:
-      integration: eblocker
-      model: Parental control profile
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          multiple: true
+          filter:
+            - integration: eblocker
+              model: Parental control profile
     filter_lists:
       required: true
       example: '["Gambling", "Social Networks"]'
@@ -235,7 +256,12 @@ create_user:
         date:
 
 delete_user:
-  target:
-    device:
-      integration: eblocker
-      model: Parental control profile
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          multiple: true
+          filter:
+            - integration: eblocker
+              model: Parental control profile
