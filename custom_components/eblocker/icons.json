@@ -1,0 +1,239 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "protected": {
+        "default": "mdi:shield-check",
+        "state": {
+          "off": "mdi:shield-off-outline"
+        }
+      }
+    },
+    "sensor": {
+      "devices_total": {
+        "default": "mdi:devices"
+      },
+      "devices_online": {
+        "default": "mdi:lan-connect"
+      },
+      "devices_protected": {
+        "default": "mdi:shield-check"
+      },
+      "devices_paused": {
+        "default": "mdi:shield-sync-outline"
+      },
+      "dns_queries": {
+        "default": "mdi:dns"
+      },
+      "blocked_queries": {
+        "default": "mdi:cancel"
+      },
+      "blocked_ads": {
+        "default": "mdi:advertisements-off"
+      },
+      "blocked_trackers": {
+        "default": "mdi:incognito"
+      },
+      "blocked_malware": {
+        "default": "mdi:bug-outline"
+      },
+      "blocked_parental_control": {
+        "default": "mdi:human-male-child"
+      },
+      "blocked_content": {
+        "default": "mdi:file-cancel-outline"
+      },
+      "block_rate": {
+        "default": "mdi:percent"
+      },
+      "system_state": {
+        "default": "mdi:server"
+      },
+      "version": {
+        "default": "mdi:tag-outline"
+      },
+      "lists_version": {
+        "default": "mdi:format-list-bulleted"
+      },
+      "next_automatic_update": {
+        "default": "mdi:update"
+      },
+      "last_automatic_update": {
+        "default": "mdi:history"
+      },
+      "license_valid_until": {
+        "default": "mdi:license"
+      },
+      "pause_remaining": {
+        "default": "mdi:timer-sand"
+      },
+      "filter_lists_enabled": {
+        "default": "mdi:filter-multiple"
+      },
+      "remaining_time": {
+        "default": "mdi:timer-sand"
+      },
+      "used_time": {
+        "default": "mdi:timer-outline"
+      },
+      "bonus_time": {
+        "default": "mdi:timer-plus-outline"
+      },
+      "assigned_devices": {
+        "default": "mdi:devices"
+      }
+    },
+    "switch": {
+      "protection": {
+        "default": "mdi:shield-check",
+        "state": {
+          "off": "mdi:shield-off-outline"
+        }
+      },
+      "pause": {
+        "default": "mdi:pause-circle-outline",
+        "state": {
+          "on": "mdi:pause-circle"
+        }
+      },
+      "filter_ads": {
+        "default": "mdi:advertisements-off"
+      },
+      "filter_trackers": {
+        "default": "mdi:incognito"
+      },
+      "filter_malware": {
+        "default": "mdi:bug-outline"
+      },
+      "automatic_updates": {
+        "default": "mdi:autorenew",
+        "state": {
+          "off": "mdi:autorenew-off"
+        }
+      },
+      "filter_list": {
+        "default": "mdi:filter-check",
+        "state": {
+          "off": "mdi:filter-off-outline"
+        }
+      },
+      "internet_blocked": {
+        "default": "mdi:web-cancel",
+        "state": {
+          "off": "mdi:web"
+        }
+      },
+      "web_filter": {
+        "default": "mdi:filter",
+        "state": {
+          "off": "mdi:filter-off"
+        }
+      },
+      "online_times": {
+        "default": "mdi:clock-check-outline",
+        "state": {
+          "off": "mdi:clock-outline"
+        }
+      },
+      "usage_limit": {
+        "default": "mdi:timer-lock-outline",
+        "state": {
+          "off": "mdi:timer-off-outline"
+        }
+      },
+      "block_list": {
+        "default": "mdi:cancel",
+        "state": {
+          "off": "mdi:check-circle-outline"
+        }
+      },
+      "allow_list": {
+        "default": "mdi:check-decagram",
+        "state": {
+          "off": "mdi:check-decagram-outline"
+        }
+      },
+      "webrtc_blocked": {
+        "default": "mdi:video-off-outline",
+        "state": {
+          "off": "mdi:video-outline"
+        }
+      },
+      "referrer_removed": {
+        "default": "mdi:link-off",
+        "state": {
+          "off": "mdi:link"
+        }
+      },
+      "dnt_header": {
+        "default": "mdi:eye-off-outline",
+        "state": {
+          "off": "mdi:eye-outline"
+        }
+      }
+    },
+    "button": {
+      "check_updates": {
+        "default": "mdi:update"
+      },
+      "new_tor_identity": {
+        "default": "mdi:refresh-circle"
+      }
+    },
+    "select": {
+      "device_user": {
+        "default": "mdi:account-child"
+      },
+      "web_filter_mode": {
+        "default": "mdi:filter-settings"
+      },
+      "ip_anonymization": {
+        "default": "mdi:incognito",
+        "state": {
+          "off": "mdi:incognito-off",
+          "tor": "mdi:onion"
+        }
+      },
+      "browser_cloaking": {
+        "default": "mdi:drama-masks",
+        "state": {
+          "off": "mdi:web"
+        }
+      }
+    }
+  },
+  "services": {
+    "pause": {
+      "service": "mdi:pause-circle"
+    },
+    "add_filter_list": {
+      "service": "mdi:filter-plus"
+    },
+    "update_filter_list": {
+      "service": "mdi:filter-cog"
+    },
+    "remove_filter_list": {
+      "service": "mdi:filter-remove"
+    },
+    "add_bonus_time": {
+      "service": "mdi:timer-plus"
+    },
+    "reset_bonus_time": {
+      "service": "mdi:timer-remove"
+    },
+    "set_usage_limit": {
+      "service": "mdi:timer-cog"
+    },
+    "set_online_times": {
+      "service": "mdi:clock-edit"
+    },
+    "set_blocked_lists": {
+      "service": "mdi:filter-cog"
+    },
+    "create_user": {
+      "service": "mdi:account-plus"
+    },
+    "delete_user": {
+      "service": "mdi:account-remove"
+    }
+  }
+}

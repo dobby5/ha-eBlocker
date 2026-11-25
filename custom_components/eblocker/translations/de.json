@@ -1,0 +1,537 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "eBlocker verbinden",
+        "description": "Gib die Adresse deines eBlockers ein. Das Administratorpasswort wird nur benötigt, wenn in den eBlocker-Einstellungen eines gesetzt ist.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "password": "Administratorpasswort"
+        },
+        "data_description": {
+          "host": "IP-Adresse oder Hostname des eBlockers, z. B. 192.168.1.10.",
+          "port": "HTTP-Port der eBlocker-REST-API (Standard 3000).",
+          "password": "Passwort der eBlocker-Einstellungen (Admin-Konsole)."
+        }
+      },
+      "devices": {
+        "title": "Geräte auswählen",
+        "description": "Der eBlocker kennt {count} Netzwerkgeräte. Wähle die Geräte aus, die eigene Entitäten erhalten sollen (Schutzstatus, Pause, Filterschalter). Das lässt sich später in den Optionen ändern.",
+        "data": {
+          "tracked_devices": "Geräte"
+        }
+      },
+      "reauth_confirm": {
+        "title": "eBlocker erneut anmelden",
+        "description": "Das Administratorpasswort für den eBlocker unter {host} wurde abgelehnt. Gib das aktuelle Passwort ein.",
+        "data": {
+          "password": "Administratorpasswort"
+        }
+      },
+      "reconfigure": {
+        "title": "eBlocker neu konfigurieren",
+        "description": "Lass das Passwort leer, um das gespeicherte zu behalten.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "password": "Administratorpasswort"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Keine Verbindung zum eBlocker. Prüfe Host und Port.",
+      "invalid_auth": "Das Administratorpasswort ist falsch oder fehlt.",
+      "login_throttled": "Der eBlocker sperrt die Passworteingabe nach einem Fehlversuch vorübergehend. Warte kurz und versuche es erneut.",
+      "unknown": "Unerwarteter Fehler. Details stehen im Log."
+    },
+    "abort": {
+      "already_configured": "Dieser eBlocker ist bereits eingerichtet.",
+      "reauth_successful": "Die erneute Anmeldung war erfolgreich.",
+      "reconfigure_successful": "Die Neukonfiguration war erfolgreich.",
+      "wrong_device": "Diese Adresse gehört zu einem anderen eBlocker."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "eBlocker-Optionen",
+        "data": {
+          "tracked_devices": "Geräte mit eigenen Entitäten",
+          "scan_interval": "Abfrageintervall",
+          "pause_minutes": "Standard-Pausendauer"
+        },
+        "data_description": {
+          "pause_minutes": "Wird beim Einschalten eines Pause-Schalters verwendet. Die Pause-Aktion erlaubt beliebige Dauern."
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "reachable": {
+        "name": "Erreichbar"
+      },
+      "updates_available": {
+        "name": "Updates verfügbar"
+      },
+      "system_problem": {
+        "name": "Systemproblem"
+      },
+      "protected": {
+        "name": "Geschützt"
+      },
+      "online": {
+        "name": "Online"
+      }
+    },
+    "sensor": {
+      "devices_total": {
+        "name": "Netzwerkgeräte"
+      },
+      "devices_online": {
+        "name": "Geräte online"
+      },
+      "devices_protected": {
+        "name": "Geschützte Geräte"
+      },
+      "devices_paused": {
+        "name": "Pausierte Geräte"
+      },
+      "dns_queries": {
+        "name": "DNS-Anfragen"
+      },
+      "blocked_queries": {
+        "name": "Blockierte Anfragen"
+      },
+      "blocked_ads": {
+        "name": "Blockierte Werbung"
+      },
+      "blocked_trackers": {
+        "name": "Blockierte Tracker"
+      },
+      "blocked_malware": {
+        "name": "Blockierte Malware"
+      },
+      "blocked_parental_control": {
+        "name": "Durch Jugendschutz blockiert"
+      },
+      "blocked_content": {
+        "name": "Blockierte Inhalte"
+      },
+      "block_rate": {
+        "name": "Blockierquote"
+      },
+      "system_state": {
+        "name": "Systemzustand"
+      },
+      "version": {
+        "name": "eBlockerOS-Version"
+      },
+      "lists_version": {
+        "name": "Filterlisten-Version"
+      },
+      "next_automatic_update": {
+        "name": "Nächstes automatisches Update"
+      },
+      "last_automatic_update": {
+        "name": "Letztes automatisches Update"
+      },
+      "license_valid_until": {
+        "name": "Lizenz gültig bis"
+      },
+      "pause_remaining": {
+        "name": "Verbleibende Pause"
+      },
+      "filter_lists_enabled": {
+        "name": "Aktive Filterlisten"
+      },
+      "remaining_time": {
+        "name": "Restzeit heute"
+      },
+      "used_time": {
+        "name": "Genutzte Zeit heute"
+      },
+      "bonus_time": {
+        "name": "Bonuszeit heute"
+      },
+      "assigned_devices": {
+        "name": "Zugeordnete Geräte"
+      }
+    },
+    "switch": {
+      "protection": {
+        "name": "Schutz"
+      },
+      "pause": {
+        "name": "Pause"
+      },
+      "filter_ads": {
+        "name": "Werbefilter"
+      },
+      "filter_trackers": {
+        "name": "Trackerfilter"
+      },
+      "filter_malware": {
+        "name": "Malware-Filter"
+      },
+      "automatic_updates": {
+        "name": "Automatische Updates"
+      },
+      "filter_list": {
+        "name": "Filterliste {name}"
+      },
+      "internet_blocked": {
+        "name": "Internet gesperrt"
+      },
+      "web_filter": {
+        "name": "Webfilter"
+      },
+      "online_times": {
+        "name": "Online-Zeiten"
+      },
+      "usage_limit": {
+        "name": "Tageslimit"
+      },
+      "block_list": {
+        "name": "Sperren: {name}"
+      },
+      "allow_list": {
+        "name": "Erlauben: {name}"
+      },
+      "webrtc_blocked": {
+        "name": "WebRTC blockieren"
+      },
+      "referrer_removed": {
+        "name": "Referrer entfernen"
+      },
+      "dnt_header": {
+        "name": "Do-Not-Track senden"
+      }
+    },
+    "button": {
+      "check_updates": {
+        "name": "Nach Updates suchen"
+      },
+      "new_tor_identity": {
+        "name": "Neue Tor-Identität"
+      }
+    },
+    "update": {
+      "eblockeros": {
+        "name": "eBlockerOS"
+      }
+    },
+    "select": {
+      "device_user": {
+        "name": "Benutzer",
+        "state": {
+          "unassigned": "Nicht zugewiesen"
+        }
+      },
+      "web_filter_mode": {
+        "name": "Webfilter-Modus",
+        "state": {
+          "block_listed": "Ausgewählte Kategorien sperren",
+          "allow_listed_only": "Nur erlaubte Listen zulassen"
+        }
+      },
+      "ip_anonymization": {
+        "name": "IP-Anonymisierung",
+        "state": {
+          "off": "Aus",
+          "tor": "Tor"
+        }
+      },
+      "browser_cloaking": {
+        "name": "Browser-Tarnung",
+        "state": {
+          "off": "Aus"
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "action_failed": {
+      "message": "Der eBlocker hat die Anfrage abgelehnt: {error}"
+    },
+    "pause_not_allowed": {
+      "message": "Der eBlocker erlaubt kein Pausieren für {device}. Bei Geräten, deren Benutzerprofil Jugendschutz-Einschränkungen hat, ist das Pausieren nicht möglich."
+    },
+    "pause_device_disabled": {
+      "message": "{device} wird nicht vom eBlocker geschützt und kann daher nicht pausiert werden."
+    },
+    "not_a_filter_list": {
+      "message": "Diese Aktion funktioniert nur mit Filterlisten-Schaltern des eBlockers."
+    },
+    "not_a_pause_switch": {
+      "message": "Diese Aktion funktioniert nur mit Pause-Schaltern des eBlockers."
+    },
+    "filter_list_not_found": {
+      "message": "Die Filterliste {name} existiert auf dem eBlocker nicht mehr."
+    },
+    "filter_list_builtin": {
+      "message": "{name} ist eine eingebaute Filterliste. Sie kann nur ein- oder ausgeschaltet, aber nicht geändert oder entfernt werden."
+    },
+    "filter_list_without_url": {
+      "message": "{name} besteht aus manuell eingetragenen Domains. Solche Listen kann eBlockerOS über seine API nicht ändern. Entferne die Liste und lege sie neu an."
+    },
+    "url_or_domains": {
+      "message": "Gib entweder eine URL oder eine Liste von Domains an (genau eines von beiden)."
+    },
+    "config_entry_required": {
+      "message": "Es sind mehrere eBlocker eingerichtet. Wähle einen über config_entry_id aus."
+    },
+    "no_config_entry": {
+      "message": "Kein geladener eBlocker gefunden."
+    },
+    "updates_disabled": {
+      "message": "Updates sind auf diesem eBlocker deaktiviert."
+    },
+    "update_not_started": {
+      "message": "Der eBlocker hat das Update nicht gestartet. Möglicherweise läuft noch ein anderes Update, ein Download oder eine Prüfung."
+    },
+    "check_too_frequent": {
+      "message": "Der eBlocker erlaubt die Suche nach Updates nur einmal pro Minute."
+    },
+    "user_not_found": {
+      "message": "Der Benutzer {user} existiert auf dem eBlocker nicht."
+    },
+    "not_a_profile_device": {
+      "message": "Wähle ein Jugendschutzprofil-Gerät der eBlocker-Integration aus."
+    },
+    "not_a_user_profile": {
+      "message": "Nur Benutzer können gelöscht werden, nicht das Standard-Profil."
+    },
+    "user_exists": {
+      "message": "Ein Benutzer mit dem Namen {user} existiert bereits."
+    },
+    "time_window_invalid": {
+      "message": "Das Ende eines Online-Zeitfensters muss nach dem Beginn liegen."
+    },
+    "filter_lists_unknown": {
+      "message": "Unbekannte Filterlisten: {lists}. Verfügbar: {available}"
+    },
+    "vpn_profile_not_found": {
+      "message": "Das VPN-Profil {profile} existiert auf dem eBlocker nicht."
+    },
+    "anonymization_device_disabled": {
+      "message": "{device} wird nicht vom eBlocker geschützt, daher kann sein Datenverkehr nicht anonymisiert werden."
+    }
+  },
+  "services": {
+    "pause": {
+      "name": "Schutz pausieren",
+      "description": "Pausiert den eBlocker-Schutz für die ausgewählten Geräte. Eine Dauer von 0 beendet eine laufende Pause.",
+      "fields": {
+        "duration": {
+          "name": "Dauer",
+          "description": "Wie lange der Schutz pausiert wird (max. 24 Stunden)."
+        }
+      }
+    },
+    "add_filter_list": {
+      "name": "Filterliste hinzufügen",
+      "description": "Fügt dem eBlocker eine eigene Filterliste hinzu, entweder von einer URL (wird regelmäßig neu geladen) oder als Liste von Domains.",
+      "fields": {
+        "config_entry_id": {
+          "name": "eBlocker",
+          "description": "Nur nötig, wenn mehrere eBlocker eingerichtet sind."
+        },
+        "name": {
+          "name": "Name",
+          "description": "Name der Filterliste."
+        },
+        "description": {
+          "name": "Beschreibung",
+          "description": "Optionale Beschreibung."
+        },
+        "category": {
+          "name": "Kategorie",
+          "description": "Was die Liste blockiert."
+        },
+        "url": {
+          "name": "URL",
+          "description": "Adresse der Liste. Entweder URL oder Domains."
+        },
+        "domains": {
+          "name": "Domains",
+          "description": "Zu blockierende (oder erlaubte) Domains. Entweder Domains oder URL."
+        },
+        "format": {
+          "name": "Format",
+          "description": "Format der Liste. Domain-Formate ergeben eine DNS-Liste, EasyList/URLs eine Musterliste."
+        },
+        "filter_type": {
+          "name": "Filtertyp",
+          "description": "Einträge blockieren (Blacklist) oder erlauben (Whitelist)."
+        },
+        "update_interval": {
+          "name": "Aktualisierung",
+          "description": "Wie oft eine URL-Liste neu geladen wird (Standard: täglich)."
+        }
+      }
+    },
+    "update_filter_list": {
+      "name": "Filterliste ändern",
+      "description": "Ändert Name, Beschreibung, URL oder Aktualisierungsintervall einer eigenen Filterliste. Eine neue URL löst einen neuen Download aus.",
+      "fields": {
+        "name": {
+          "name": "Name",
+          "description": "Neuer Name."
+        },
+        "description": {
+          "name": "Beschreibung",
+          "description": "Neue Beschreibung."
+        },
+        "url": {
+          "name": "URL",
+          "description": "Neue Adresse der Liste."
+        },
+        "update_interval": {
+          "name": "Aktualisierung",
+          "description": "Wie oft die Liste neu geladen wird."
+        }
+      }
+    },
+    "remove_filter_list": {
+      "name": "Filterliste entfernen",
+      "description": "Entfernt eine eigene Filterliste vom eBlocker. Eingebaute Listen können nicht entfernt werden."
+    },
+    "add_bonus_time": {
+      "name": "Bonuszeit hinzufügen",
+      "description": "Gibt zusätzliche Online-Zeit für heute (negative Werte ziehen sie wieder ab).",
+      "fields": {
+        "minutes": {
+          "name": "Minuten",
+          "description": "Bonusminuten für heute."
+        }
+      }
+    },
+    "reset_bonus_time": {
+      "name": "Bonuszeit zurücksetzen",
+      "description": "Entfernt die heutige Bonuszeit."
+    },
+    "set_usage_limit": {
+      "name": "Tageslimit setzen",
+      "description": "Legt die maximale Online-Zeit pro Tag fest.",
+      "fields": {
+        "minutes": {
+          "name": "Minuten",
+          "description": "Maximale Online-Zeit pro Tag."
+        },
+        "days": {
+          "name": "Tage",
+          "description": "Tage, für die das Limit gilt (Standard: alle)."
+        },
+        "activate": {
+          "name": "Aktivieren",
+          "description": "Tageslimit auch einschalten."
+        }
+      }
+    },
+    "set_online_times": {
+      "name": "Online-Zeiten setzen",
+      "description": "Ersetzt die Zeitfenster, in denen das Internet erlaubt ist.",
+      "fields": {
+        "times": {
+          "name": "Zeitfenster",
+          "description": "Liste von Zeitfenstern mit day (monday..sunday, weekdays, weekend), start und end (HH:MM). Eine leere Liste entfernt alle Zeitfenster."
+        },
+        "activate": {
+          "name": "Aktivieren",
+          "description": "Online-Zeiten auch einschalten (bei leerer Liste ausschalten)."
+        }
+      }
+    },
+    "set_blocked_lists": {
+      "name": "Gesperrte Kategorien setzen",
+      "description": "Legt fest, welche Jugendschutz-Listen (z. B. Glücksspiel, Soziale Netzwerke) für das Profil gesperrt sind.",
+      "fields": {
+        "filter_lists": {
+          "name": "Filterlisten",
+          "description": "Namen (deutsch oder englisch) oder IDs der zu sperrenden Listen. Ersetzt die bisherige Auswahl."
+        },
+        "activate": {
+          "name": "Aktivieren",
+          "description": "Webfilter auch einschalten."
+        }
+      }
+    },
+    "create_user": {
+      "name": "Benutzer anlegen",
+      "description": "Legt einen Benutzer mit eigenem Jugendschutzprofil an. Kinder bekommen die Vorlage, die der eBlocker für ihr Alter vorschlägt.",
+      "fields": {
+        "config_entry_id": {
+          "name": "eBlocker",
+          "description": "Nur nötig, wenn mehrere eBlocker eingerichtet sind."
+        },
+        "name": {
+          "name": "Name",
+          "description": "Name des Benutzers."
+        },
+        "role": {
+          "name": "Rolle",
+          "description": "Kind, Elternteil oder andere."
+        },
+        "birthday": {
+          "name": "Geburtstag",
+          "description": "Bestimmt bei Kindern die Altersvorlage."
+        }
+      }
+    },
+    "delete_user": {
+      "name": "Benutzer löschen",
+      "description": "Löscht einen Benutzer und sein Profil. Zugeordnete Geräte fallen auf das Standard-Profil zurück."
+    }
+  },
+  "selector": {
+    "category": {
+      "options": {
+        "ads": "Werbung",
+        "trackers": "Tracker",
+        "malware": "Malware",
+        "parental_control": "Jugendschutz"
+      }
+    },
+    "format": {
+      "options": {
+        "domains": "Domains (eine pro Zeile)",
+        "etc_hosts": "Hosts-Datei (/etc/hosts)",
+        "squid_acl": "Squid-ACL",
+        "easylist": "EasyList / Adblock Plus",
+        "urls": "URLs"
+      }
+    },
+    "filter_type": {
+      "options": {
+        "blacklist": "Blockieren (Blacklist)",
+        "whitelist": "Erlauben (Whitelist)"
+      }
+    },
+    "update_interval": {
+      "options": {
+        "daily": "Täglich",
+        "never": "Nie"
+      }
+    },
+    "weekday": {
+      "options": {
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag",
+        "saturday": "Samstag",
+        "sunday": "Sonntag"
+      }
+    },
+    "user_role": {
+      "options": {
+        "child": "Kind",
+        "parent": "Elternteil",
+        "other": "Andere"
+      }
+    }
+  }
+}

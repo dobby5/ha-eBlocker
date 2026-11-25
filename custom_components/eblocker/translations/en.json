@@ -1,0 +1,537 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect eBlocker",
+        "description": "Enter the address of your eBlocker. The admin password is only needed if one is set in the eBlocker settings.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "password": "Admin password"
+        },
+        "data_description": {
+          "host": "IP address or host name of the eBlocker, e.g. 192.168.1.10.",
+          "port": "HTTP port of the eBlocker REST API (default 3000).",
+          "password": "Password of the eBlocker admin console."
+        }
+      },
+      "devices": {
+        "title": "Select devices",
+        "description": "The eBlocker knows {count} network devices. Select the devices that should get their own entities (protection status, pause, filter switches). You can change this later in the options.",
+        "data": {
+          "tracked_devices": "Devices"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate eBlocker",
+        "description": "The admin password for the eBlocker at {host} was rejected. Enter the current password.",
+        "data": {
+          "password": "Admin password"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure eBlocker",
+        "description": "Leave the password empty to keep the stored one.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "password": "Admin password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to the eBlocker. Check host and port.",
+      "invalid_auth": "The admin password is wrong or missing.",
+      "login_throttled": "The eBlocker temporarily blocks password entry after a failed attempt. Wait a moment and try again.",
+      "unknown": "Unexpected error. See the log for details."
+    },
+    "abort": {
+      "already_configured": "This eBlocker is already configured.",
+      "reauth_successful": "Re-authentication was successful.",
+      "reconfigure_successful": "Reconfiguration was successful.",
+      "wrong_device": "This address belongs to a different eBlocker."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "eBlocker options",
+        "data": {
+          "tracked_devices": "Devices with own entities",
+          "scan_interval": "Polling interval",
+          "pause_minutes": "Default pause duration"
+        },
+        "data_description": {
+          "pause_minutes": "Used when a pause switch is turned on. The pause action allows any duration."
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "reachable": {
+        "name": "Reachable"
+      },
+      "updates_available": {
+        "name": "Updates available"
+      },
+      "system_problem": {
+        "name": "System problem"
+      },
+      "protected": {
+        "name": "Protected"
+      },
+      "online": {
+        "name": "Online"
+      }
+    },
+    "sensor": {
+      "devices_total": {
+        "name": "Network devices"
+      },
+      "devices_online": {
+        "name": "Devices online"
+      },
+      "devices_protected": {
+        "name": "Protected devices"
+      },
+      "devices_paused": {
+        "name": "Paused devices"
+      },
+      "dns_queries": {
+        "name": "DNS queries"
+      },
+      "blocked_queries": {
+        "name": "Blocked queries"
+      },
+      "blocked_ads": {
+        "name": "Blocked ads"
+      },
+      "blocked_trackers": {
+        "name": "Blocked trackers"
+      },
+      "blocked_malware": {
+        "name": "Blocked malware"
+      },
+      "blocked_parental_control": {
+        "name": "Blocked by parental control"
+      },
+      "blocked_content": {
+        "name": "Blocked content"
+      },
+      "block_rate": {
+        "name": "Block rate"
+      },
+      "system_state": {
+        "name": "System state"
+      },
+      "version": {
+        "name": "eBlockerOS version"
+      },
+      "lists_version": {
+        "name": "Filter lists version"
+      },
+      "next_automatic_update": {
+        "name": "Next automatic update"
+      },
+      "last_automatic_update": {
+        "name": "Last automatic update"
+      },
+      "license_valid_until": {
+        "name": "License valid until"
+      },
+      "pause_remaining": {
+        "name": "Pause remaining"
+      },
+      "filter_lists_enabled": {
+        "name": "Active filter lists"
+      },
+      "remaining_time": {
+        "name": "Remaining time today"
+      },
+      "used_time": {
+        "name": "Used time today"
+      },
+      "bonus_time": {
+        "name": "Bonus time today"
+      },
+      "assigned_devices": {
+        "name": "Assigned devices"
+      }
+    },
+    "switch": {
+      "protection": {
+        "name": "Protection"
+      },
+      "pause": {
+        "name": "Pause"
+      },
+      "filter_ads": {
+        "name": "Ad filter"
+      },
+      "filter_trackers": {
+        "name": "Tracker filter"
+      },
+      "filter_malware": {
+        "name": "Malware filter"
+      },
+      "automatic_updates": {
+        "name": "Automatic updates"
+      },
+      "filter_list": {
+        "name": "Filter list {name}"
+      },
+      "internet_blocked": {
+        "name": "Internet blocked"
+      },
+      "web_filter": {
+        "name": "Web filter"
+      },
+      "online_times": {
+        "name": "Online times"
+      },
+      "usage_limit": {
+        "name": "Daily time limit"
+      },
+      "block_list": {
+        "name": "Block {name}"
+      },
+      "allow_list": {
+        "name": "Allow {name}"
+      },
+      "webrtc_blocked": {
+        "name": "Block WebRTC"
+      },
+      "referrer_removed": {
+        "name": "Remove referrer"
+      },
+      "dnt_header": {
+        "name": "Send Do Not Track"
+      }
+    },
+    "button": {
+      "check_updates": {
+        "name": "Check for updates"
+      },
+      "new_tor_identity": {
+        "name": "New Tor identity"
+      }
+    },
+    "update": {
+      "eblockeros": {
+        "name": "eBlockerOS"
+      }
+    },
+    "select": {
+      "device_user": {
+        "name": "User",
+        "state": {
+          "unassigned": "Not assigned"
+        }
+      },
+      "web_filter_mode": {
+        "name": "Web filter mode",
+        "state": {
+          "block_listed": "Block selected categories",
+          "allow_listed_only": "Only allow selected lists"
+        }
+      },
+      "ip_anonymization": {
+        "name": "IP anonymization",
+        "state": {
+          "off": "Off",
+          "tor": "Tor"
+        }
+      },
+      "browser_cloaking": {
+        "name": "Browser cloaking",
+        "state": {
+          "off": "Off"
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "action_failed": {
+      "message": "The eBlocker rejected the request: {error}"
+    },
+    "pause_not_allowed": {
+      "message": "The eBlocker does not allow pausing {device}. Pausing is not possible for devices whose user profile has parental control restrictions."
+    },
+    "pause_device_disabled": {
+      "message": "{device} is not protected by the eBlocker, so it cannot be paused."
+    },
+    "not_a_filter_list": {
+      "message": "This action only works for eBlocker filter list switches."
+    },
+    "not_a_pause_switch": {
+      "message": "This action only works for eBlocker pause switches."
+    },
+    "filter_list_not_found": {
+      "message": "The filter list {name} no longer exists on the eBlocker."
+    },
+    "filter_list_builtin": {
+      "message": "{name} is a built-in filter list. It can only be turned on or off, not changed or removed."
+    },
+    "filter_list_without_url": {
+      "message": "{name} consists of manually entered domains. eBlockerOS cannot change such lists via its API; remove it and add it again instead."
+    },
+    "url_or_domains": {
+      "message": "Specify either a URL or a list of domains (exactly one of them)."
+    },
+    "config_entry_required": {
+      "message": "Several eBlockers are configured. Select one with config_entry_id."
+    },
+    "no_config_entry": {
+      "message": "No loaded eBlocker found."
+    },
+    "updates_disabled": {
+      "message": "Updates are disabled on this eBlocker."
+    },
+    "update_not_started": {
+      "message": "The eBlocker did not start the update. Another update, download or check may still be running."
+    },
+    "check_too_frequent": {
+      "message": "The eBlocker allows checking for updates only once per minute."
+    },
+    "user_not_found": {
+      "message": "The user {user} does not exist on the eBlocker."
+    },
+    "not_a_profile_device": {
+      "message": "Select a parental control profile device of the eBlocker integration."
+    },
+    "not_a_user_profile": {
+      "message": "Only users can be deleted, not the standard profile."
+    },
+    "user_exists": {
+      "message": "A user named {user} already exists."
+    },
+    "time_window_invalid": {
+      "message": "The end of an online time window must be after its start."
+    },
+    "filter_lists_unknown": {
+      "message": "Unknown filter lists: {lists}. Available: {available}"
+    },
+    "vpn_profile_not_found": {
+      "message": "The VPN profile {profile} does not exist on the eBlocker."
+    },
+    "anonymization_device_disabled": {
+      "message": "{device} is not protected by the eBlocker, so its traffic cannot be anonymized."
+    }
+  },
+  "services": {
+    "pause": {
+      "name": "Pause protection",
+      "description": "Pauses eBlocker protection for the selected devices. A duration of 0 ends a running pause.",
+      "fields": {
+        "duration": {
+          "name": "Duration",
+          "description": "How long the protection is paused (max. 24 hours)."
+        }
+      }
+    },
+    "add_filter_list": {
+      "name": "Add filter list",
+      "description": "Adds a custom filter list to the eBlocker, either from a URL (downloaded regularly) or from a list of domains.",
+      "fields": {
+        "config_entry_id": {
+          "name": "eBlocker",
+          "description": "Only needed if several eBlockers are configured."
+        },
+        "name": {
+          "name": "Name",
+          "description": "Name of the filter list."
+        },
+        "description": {
+          "name": "Description",
+          "description": "Optional description."
+        },
+        "category": {
+          "name": "Category",
+          "description": "What the list blocks."
+        },
+        "url": {
+          "name": "URL",
+          "description": "Address of the list. Either a URL or domains."
+        },
+        "domains": {
+          "name": "Domains",
+          "description": "Domains to block (or allow). Either domains or a URL."
+        },
+        "format": {
+          "name": "Format",
+          "description": "Format of the list. Domain formats create a DNS list, EasyList/URLs create a pattern list."
+        },
+        "filter_type": {
+          "name": "Filter type",
+          "description": "Block (blacklist) or allow (whitelist) the entries."
+        },
+        "update_interval": {
+          "name": "Update interval",
+          "description": "How often a URL list is downloaded again (default: daily)."
+        }
+      }
+    },
+    "update_filter_list": {
+      "name": "Change filter list",
+      "description": "Changes name, description, URL or update interval of a custom filter list. A new URL triggers a new download.",
+      "fields": {
+        "name": {
+          "name": "Name",
+          "description": "New name."
+        },
+        "description": {
+          "name": "Description",
+          "description": "New description."
+        },
+        "url": {
+          "name": "URL",
+          "description": "New address of the list."
+        },
+        "update_interval": {
+          "name": "Update interval",
+          "description": "How often the list is downloaded again."
+        }
+      }
+    },
+    "remove_filter_list": {
+      "name": "Remove filter list",
+      "description": "Removes a custom filter list from the eBlocker. Built-in lists cannot be removed."
+    },
+    "add_bonus_time": {
+      "name": "Add bonus time",
+      "description": "Gives additional online time for today (negative values take it away again).",
+      "fields": {
+        "minutes": {
+          "name": "Minutes",
+          "description": "Bonus minutes for today."
+        }
+      }
+    },
+    "reset_bonus_time": {
+      "name": "Reset bonus time",
+      "description": "Removes today's bonus time."
+    },
+    "set_usage_limit": {
+      "name": "Set daily time limit",
+      "description": "Sets the maximum online time per day.",
+      "fields": {
+        "minutes": {
+          "name": "Minutes",
+          "description": "Maximum online time per day."
+        },
+        "days": {
+          "name": "Days",
+          "description": "Days the limit applies to (default: all)."
+        },
+        "activate": {
+          "name": "Activate",
+          "description": "Also turn the daily time limit on."
+        }
+      }
+    },
+    "set_online_times": {
+      "name": "Set online times",
+      "description": "Replaces the time windows in which internet access is allowed.",
+      "fields": {
+        "times": {
+          "name": "Time windows",
+          "description": "List of windows with day (monday..sunday, weekdays, weekend), start and end (HH:MM). An empty list removes all windows."
+        },
+        "activate": {
+          "name": "Activate",
+          "description": "Also turn online times on (off for an empty list)."
+        }
+      }
+    },
+    "set_blocked_lists": {
+      "name": "Set blocked categories",
+      "description": "Sets which parental control lists (e.g. gambling, social networks) are blocked for the profile.",
+      "fields": {
+        "filter_lists": {
+          "name": "Filter lists",
+          "description": "Names (German or English) or IDs of the lists to block. Replaces the current selection."
+        },
+        "activate": {
+          "name": "Activate",
+          "description": "Also turn the web filter on."
+        }
+      }
+    },
+    "create_user": {
+      "name": "Create user",
+      "description": "Creates a user with an own parental control profile. Children get the settings template the eBlocker suggests for their age.",
+      "fields": {
+        "config_entry_id": {
+          "name": "eBlocker",
+          "description": "Only needed if several eBlockers are configured."
+        },
+        "name": {
+          "name": "Name",
+          "description": "Name of the user."
+        },
+        "role": {
+          "name": "Role",
+          "description": "Child, parent or other."
+        },
+        "birthday": {
+          "name": "Birthday",
+          "description": "Used to pick the age-based template for children."
+        }
+      }
+    },
+    "delete_user": {
+      "name": "Delete user",
+      "description": "Deletes a user and the user's profile. Assigned devices go back to the standard profile."
+    }
+  },
+  "selector": {
+    "category": {
+      "options": {
+        "ads": "Ads",
+        "trackers": "Trackers",
+        "malware": "Malware",
+        "parental_control": "Parental control"
+      }
+    },
+    "format": {
+      "options": {
+        "domains": "Domains (one per line)",
+        "etc_hosts": "Hosts file (/etc/hosts)",
+        "squid_acl": "Squid ACL",
+        "easylist": "EasyList / Adblock Plus",
+        "urls": "URLs"
+      }
+    },
+    "filter_type": {
+      "options": {
+        "blacklist": "Block (blacklist)",
+        "whitelist": "Allow (whitelist)"
+      }
+    },
+    "update_interval": {
+      "options": {
+        "daily": "Daily",
+        "never": "Never"
+      }
+    },
+    "weekday": {
+      "options": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
+    },
+    "user_role": {
+      "options": {
+        "child": "Child",
+        "parent": "Parent",
+        "other": "Other"
+      }
+    }
+  }
+}

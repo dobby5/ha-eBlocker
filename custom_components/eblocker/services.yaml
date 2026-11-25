@@ -1,0 +1,241 @@
+pause:
+  target:
+    entity:
+      integration: eblocker
+      domain: switch
+  fields:
+    duration:
+      required: true
+      example: "00:30:00"
+      selector:
+        duration:
+
+add_filter_list:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: eblocker
+    name:
+      required: true
+      example: "My block list"
+      selector:
+        text:
+    description:
+      required: false
+      selector:
+        text:
+    category:
+      required: true
+      default: ads
+      selector:
+        select:
+          translation_key: category
+          options:
+            - ads
+            - trackers
+            - malware
+            - parental_control
+    url:
+      required: false
+      example: "https://example.com/blocklist.txt"
+      selector:
+        text:
+          type: url
+    domains:
+      required: false
+      example: "example.com"
+      selector:
+        text:
+          multiple: true
+    format:
+      required: false
+      default: domains
+      selector:
+        select:
+          translation_key: format
+          options:
+            - domains
+            - etc_hosts
+            - squid_acl
+            - easylist
+            - urls
+    filter_type:
+      required: false
+      default: blacklist
+      selector:
+        select:
+          translation_key: filter_type
+          options:
+            - blacklist
+            - whitelist
+    update_interval:
+      required: false
+      selector:
+        select:
+          translation_key: update_interval
+          options:
+            - daily
+            - never
+
+update_filter_list:
+  target:
+    entity:
+      integration: eblocker
+      domain: switch
+  fields:
+    name:
+      required: false
+      selector:
+        text:
+    description:
+      required: false
+      selector:
+        text:
+    url:
+      required: false
+      selector:
+        text:
+          type: url
+    update_interval:
+      required: false
+      selector:
+        select:
+          translation_key: update_interval
+          options:
+            - daily
+            - never
+
+remove_filter_list:
+  target:
+    entity:
+      integration: eblocker
+      domain: switch
+
+add_bonus_time:
+  target:
+    device:
+      integration: eblocker
+      model: Parental control profile
+  fields:
+    minutes:
+      required: true
+      example: 30
+      selector:
+        number:
+          min: -720
+          max: 720
+          step: 5
+          unit_of_measurement: min
+          mode: box
+
+reset_bonus_time:
+  target:
+    device:
+      integration: eblocker
+      model: Parental control profile
+
+set_usage_limit:
+  target:
+    device:
+      integration: eblocker
+      model: Parental control profile
+  fields:
+    minutes:
+      required: true
+      example: 90
+      selector:
+        number:
+          min: 0
+          max: 1440
+          step: 5
+          unit_of_measurement: min
+          mode: box
+    days:
+      required: false
+      selector:
+        select:
+          multiple: true
+          translation_key: weekday
+          options:
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday
+    activate:
+      required: false
+      default: true
+      selector:
+        boolean:
+
+set_online_times:
+  target:
+    device:
+      integration: eblocker
+      model: Parental control profile
+  fields:
+    times:
+      required: true
+      example: '[{"day": "weekdays", "start": "07:00", "end": "20:00"}, {"day": "weekend", "start": "08:00", "end": "21:30"}]'
+      selector:
+        object:
+    activate:
+      required: false
+      default: true
+      selector:
+        boolean:
+
+set_blocked_lists:
+  target:
+    device:
+      integration: eblocker
+      model: Parental control profile
+  fields:
+    filter_lists:
+      required: true
+      example: '["Gambling", "Social Networks"]'
+      selector:
+        text:
+          multiple: true
+    activate:
+      required: false
+      default: true
+      selector:
+        boolean:
+
+create_user:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: eblocker
+    name:
+      required: true
+      example: Lisa
+      selector:
+        text:
+    role:
+      required: false
+      default: child
+      selector:
+        select:
+          translation_key: user_role
+          options:
+            - child
+            - parent
+            - other
+    birthday:
+      required: false
+      selector:
+        date:
+
+delete_user:
+  target:
+    device:
+      integration: eblocker
+      model: Parental control profile

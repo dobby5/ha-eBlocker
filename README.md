@@ -1,0 +1,315 @@
+# eBlocker for Home Assistant
+
+[![Validate](https://github.com/dobby5/ha-eBlocker/actions/workflows/validate.yml/badge.svg)](https://github.com/dobby5/ha-eBlocker/actions/workflows/validate.yml)
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+Custom integration to monitor and control an [eBlocker](https://github.com/eblocker/eblocker) from Home Assistant. It runs fully local and uses the same REST API as the eBlocker settings UI. No cloud is involved.
+
+Tested with eBlockerOS 4.0.3 and Home Assistant 2026.10. The UI is available in English and German.
+
+## Features
+
+### eBlocker (hub device)
+
+| Entity | Type | Description |
+| --- | --- | --- |
+| Reachable | Binary sensor | `off` as soon as the eBlocker stops answering. Stays available, so automations can react to it. |
+| System problem | Binary sensor | `on` if the eBlocker does not report `RUNNING` or a subsystem is not `OK` |
+| Updates available | Binary sensor | New eBlockerOS or filter list packages |
+| Network devices, Devices online, Protected devices, Paused devices | Sensors | Device counts (without the eBlocker itself) |
+| DNS queries, Blocked queries | Sensors | Running totals (`total_increasing`) |
+| Blocked ads, trackers, malware, by parental control, content | Sensors | Blocks by reason. "Blocked content" is disabled by default. |
+| Block rate | Sensor | Share of blocked queries in % |
+| System state, eBlockerOS version, Filter lists version, Last/Next automatic update, License valid until | Diagnostic sensors | System information |
+
+The statistics sensors have a `counting_since` attribute: the time the eBlocker started counting.
+
+### Updates
+
+| Entity | Type | Description |
+| --- | --- | --- |
+| eBlockerOS | Update | Shows pending updates. **Install** starts the update on the eBlocker, with progress. |
+| Check for updates | Button | Makes the eBlocker look for updates (at most once per minute) |
+| Automatic updates | Switch | Automatic updates on/off. The `allowed_by_license` attribute shows whether the license allows them. |
+
+The eBlocker only reports *whether* updates are pending and which packages are affected (e.g. `eblocker-lists`), not a target version. The update entity therefore shows `4.0.3 + eblocker-lists` as the latest version.
+
+### Filter lists
+
+Every filter list of the eBlocker (ads, trackers, malware, parental control, content; built-in and custom) gets a **Filter list …** switch (*configuration* category). New lists appear automatically, deleted ones disappear. Attributes: `category`, `list_type` (domain/pattern), `filter_type`, `custom`, `url`, `format`, `update_interval`, `update_status`, `last_update`. The **Active filter lists** sensor (disabled by default) counts the enabled lists and names failed downloads.
+
+These switches on the eBlocker are **global main switches**: a list turned off here is ignored by the eBlocker for every device and every profile. Which parental control category applies to whom is set on each profile instead ("Block …", see [Parental control](#parental-control)). That is why the global switches of the **built-in parental control lists are disabled by default**; enable them under *Settings → Entities* if needed. Ad, tracker, malware and content lists as well as custom lists stay enabled: the former only exist globally, and the update/remove actions need the entity for the latter.
+
+Manage custom lists with these actions:
+
+```yaml
+# List from a URL (downloaded again every day)
+action: eblocker.add_filter_list
+data:
+  name: Social Media
+  category: parental_control    # ads | trackers | malware | parental_control
+  url: https://example.org/social-domains.txt
+  format: domains               # domains | etc_hosts | squid_acl | easylist | urls
+  filter_type: blacklist        # blacklist | whitelist
+response_variable: new_list     # contains filter_list_id
+
+# List of individual domains
+action: eblocker.add_filter_list
+data:
+  name: My block list
+  category: ads
+  domains:
+    - ads.example.com
+    - tracker.example.net
+
+# Change URL, name or interval of a custom list
+action: eblocker.update_filter_list
+target:
+  entity_id: switch.my_eblocker_filter_list_social_media
+data:
+  url: https://example.org/other-list.txt
+  update_interval: daily
+
+# Delete a custom list
+action: eblocker.remove_filter_list
+target:
+  entity_id: switch.my_eblocker_filter_list_social_media
+```
+
+> **Limitations:** Built-in lists can only be turned on or off. Custom lists that consist of entered domains only (no URL) cannot be toggled or changed through the eBlockerOS API, because `BlockerService.updateBlocker` requires a URL. Remove such a list and add it again instead.
+
+### Per selected network device
+
+During setup (or later in the options) you choose which devices get their own entities. With ~70 devices anything else would be cluttered.
+
+| Entity | Type | Description |
+| --- | --- | --- |
+| Protected | Binary sensor | The eBlocker is active for the device and not paused |
+| Online | Binary sensor | The device is currently on the network |
+| Protection | Switch | Turn the eBlocker on/off for the device |
+| Pause | Switch | Pause protection for the default duration (options, default 15 min). Turning it off ends the pause. |
+| Pause remaining | Sensor | Remaining time of a running pause |
+| Ad filter, Tracker filter, Malware filter | Switches (configuration) | Individual filters of the device |
+| User | Select (configuration) | Assigns the device to a parental control user, or back to the standard profile with "Not assigned" |
+| IP anonymization | Select | See [Anonymization](#anonymization) |
+| Browser cloaking | Select | See [Anonymization](#anonymization) |
+
+### Action `eblocker.pause`
+
+Pauses protection for any duration (max. 24 h). A duration of 0 ends the pause.
+
+```yaml
+action: eblocker.pause
+target:
+  entity_id: switch.laptop_pause
+data:
+  duration: "00:30:00"
+```
+
+> **Pause limitation:** The eBlocker only allows pausing devices whose user profile has **no** parental control restrictions (web filter, online times or daily time limit). For all other devices it refuses the pause and Home Assistant shows an error. The `pausing_allowed` attribute of the pause switch shows whether pausing is possible. The **Protection** switch works regardless.
+
+### Anonymization
+
+Per selected network device:
+
+| Entity | Type | Description |
+| --- | --- | --- |
+| IP anonymization | Select | **Off**, **Tor** or one of your VPN profiles. Routes all traffic of the device through Tor or the VPN. Tor and VPN exclude each other: when switching, the integration turns the other one off first, exactly like the eBlocker UI. Only for devices protected by the eBlocker. |
+| Browser cloaking | Select | Makes the device's browser appear as a different device (iPhone, PC (Windows), Mac, …). Only works with HTTPS support enabled for the eBlocker **and** the device, otherwise *unavailable*. |
+
+On the eBlocker itself (apply to all devices). The three switches are disabled by default and can be enabled under *Settings → Entities*:
+
+| Entity | Type | Description |
+| --- | --- | --- |
+| New Tor identity | Button | New Tor circuits, i.e. a new exit IP |
+| Block WebRTC | Switch (configuration) | Prevents WebRTC from revealing the real IP |
+| Remove referrer | Switch (configuration) | Removes the referring page from requests |
+| Send Do Not Track | Switch (configuration) | Sends the Do-Not-Track header |
+
+VPN profiles themselves (credentials, configuration) are still set up in the eBlocker UI. The integration only reads their ID and name; it never takes over the credentials.
+
+### Parental control
+
+On the eBlocker, parental control is tied to **profiles**. Every user (child, parent) has an own profile, and all devices without a user use the **standard profile**. The integration creates a device for the standard profile and for each user:
+
+| Entity | Type | Description |
+| --- | --- | --- |
+| Internet blocked | Switch | Blocks the internet for all devices of the profile immediately |
+| Block *category* | Switch | One switch per parental control category (gambling, social networks, online gaming, custom lists, …). Turning it on blocks the category for the profile and enables the web filter. When the last category is turned off, the web filter goes off (same as the eBlocker UI). If the list is turned off globally on the eBlocker, the switch is *unavailable*, because it would have no effect. |
+| Allow *list* | Switch | Allow lists such as fragFINN |
+| Web filter mode | Select (configuration) | "Block selected categories" or "Only allow selected lists". The `role` attribute of the category switches shows whether a list is a rule or an exception in the current mode. |
+| Web filter | Switch (configuration) | Web filter as a whole on/off. Attributes: `blocked_lists`, `allowed_lists`, `mode` |
+| Online times | Switch (configuration) | Internet only within set time windows. Attribute: `online_times` |
+| Daily time limit | Switch (configuration) | Maximum online time per day. Attributes: minutes per weekday |
+| Remaining time today / Used time today | Sensors | Only for users with an active daily time limit |
+| Bonus time today | Sensor | Bonus minutes granted today |
+| Assigned devices | Sensor | Number of devices, `devices` attribute with their names |
+
+Actions (the target is always the profile device):
+
+```yaml
+# Give Lisa 30 more minutes online today
+action: eblocker.add_bonus_time
+target:
+  device_id: <device "Lisa">
+data:
+  minutes: 30
+
+# Daily time limit of 60 minutes on weekdays
+action: eblocker.set_usage_limit
+target:
+  device_id: <device "Lisa">
+data:
+  minutes: 60
+  days: [monday, tuesday, wednesday, thursday, friday]
+
+# Online times (day: monday..sunday, weekdays, weekend)
+action: eblocker.set_online_times
+target:
+  device_id: <device "Lisa">
+data:
+  times:
+    - {day: weekdays, start: "07:00", end: "20:00"}
+    - {day: weekend, start: "08:00", end: "21:30"}
+
+# Blocked categories (English or German list names)
+action: eblocker.set_blocked_lists
+target:
+  device_id: <device "Lisa">
+data:
+  filter_lists: [Gambling, Social Networks, Pornography]
+
+# Create a user: children get the eBlocker's age-based template
+action: eblocker.create_user
+data:
+  name: Max
+  role: child
+  birthday: "2017-05-01"
+
+# Delete a user: their devices fall back to the standard profile
+action: eblocker.delete_user
+target:
+  device_id: <device "Max">
+```
+
+There is also `eblocker.reset_bonus_time`. After creating or deleting a user the integration reloads itself, so the profile's entities appear or disappear.
+
+> **Notes:**
+>
+> - The standard profile settings apply to **all** devices without a user. The eBlocker only allows pausing devices whose profile has no web filter, no online times and no daily time limit. So if the web filter of the standard profile is on, none of those devices can be paused.
+> - The eBlocker only provides remaining and used time through its dashboard API. For this the integration additionally logs in to the `ADMINDASHBOARD` context with the same admin password.
+
+### Entities disabled by default
+
+"Blocked content", "Active filter lists", the three global anonymization switches and the global switches of the built-in parental control lists. Home Assistant only applies this default when an entity is registered for the first time. When updating from an older version, the integration therefore disables these entities once through a migration. Entities you enable again afterwards stay enabled.
+
+## Installation
+
+### HACS (custom repository)
+
+1. HACS → ⋮ → *Custom repositories* → add `https://github.com/dobby5/ha-eBlocker`, type **Integration**.
+2. Install "eBlocker" and restart Home Assistant.
+
+### Manual
+
+Copy the folder `custom_components/eblocker` to `<config>/custom_components/eblocker` and restart Home Assistant.
+
+## Setup
+
+Go to *Settings → Devices & services → Add integration → eBlocker* and enter:
+
+- **Host**: IP address of the eBlocker, e.g. `192.168.1.10`
+- **Port**: `3000` (HTTP port of the eBlocker API)
+- **Admin password**: only needed if one is set in the eBlocker settings
+
+Then select the devices that get their own entities. The **options** let you change the device selection, the polling interval (default 60 s) and the default pause duration later. *Reconfigure* changes host, port or password.
+
+If the password is changed later, Home Assistant asks you to re-authenticate.
+
+> After a wrong password the eBlocker blocks logins from that IP address for an increasing waiting time. The integration reports this as a separate error ("temporarily blocked") and tries again on the next poll.
+
+## Example automation
+
+```yaml
+alias: eBlocker unreachable
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.my_eblocker_reachable
+    to: "off"
+    for: "00:05:00"
+actions:
+  - action: notify.notify
+    data:
+      message: "The eBlocker has not answered for 5 minutes."
+```
+
+(The actual entity ID depends on the name of your eBlocker and your language.)
+
+## Technical details
+
+| Method | Endpoint | Used for |
+| --- | --- | --- |
+| GET | `/api/adminconsole/systemstatus` | System state, version (public) |
+| GET | `/api/adminconsole/authentication/token/ADMINCONSOLE` | Get a token (public) |
+| POST | `/api/adminconsole/authentication/login/ADMINCONSOLE` | Log in with `{"currentPassword": …}` |
+| GET | `/api/adminconsole/authentication/renew/ADMINCONSOLE` | Renew the token without sending the password again |
+| GET | `/api/adminconsole/devices` | All devices |
+| GET/PUT | `/api/adminconsole/devices/{id}` | Read/write a device (full object) |
+| GET | `/api/adminconsole/stats/total` | DNS statistics |
+| GET | `/api/adminconsole/updates/status` | Update information |
+| GET | `/api/adminconsole/registration` | License |
+| GET/PUT | `/api/adminconsole/device/pause?deviceId={id}` | Pause state / set pause (`{"pausing": seconds}`) |
+| GET/POST | `/api/blockers/` | Read filter lists / add a custom list |
+| PUT/DELETE | `/api/blockers/{id}` | Write a filter list (full object) / delete it |
+| POST | `/api/adminconsole/updates/status` | Start the update (`{"updating": true}`) |
+| GET | `/api/adminconsole/updates/check` | Check for updates (max. once per minute) |
+| POST | `/api/adminconsole/updates/automaticUpdatesStatus` | Automatic updates on/off |
+| GET/POST/PUT | `/api/adminconsole/users` | Read / create / change users |
+| DELETE | `/api/adminconsole/users/{id}` | Delete a user |
+| GET/POST/PUT | `/api/adminconsole/userprofiles` | Read / create / write profiles (full object) |
+| DELETE | `/api/adminconsole/userprofiles/{id}` | Delete a custom profile |
+| POST/DELETE | `/api/adminconsole/userprofile/bonustime/{id}` | Grant / reset today's bonus time |
+| GET | `/api/adminconsole/filterlists` | Parental control lists (for profiles) |
+| GET | `/api/parentalcontrol/usage/{userId}` | Today's usage (token in the `ADMINDASHBOARD` context) |
+| GET | `/api/adminconsole/vpn/profiles` | VPN profiles (only ID/name are kept) |
+| PUT | `/api/adminconsole/tor/config/{deviceId}` | Tor for a device (`{"sessionUseTor": true}`) |
+| PUT | `/api/adminconsole/vpn/profile/{id}/status/{deviceId}` | VPN for a device (`true`/`false`) |
+| PUT | `/api/adminconsole/tor/newidentity` | New Tor identity |
+| GET | `/api/adminconsole/useragent/list` | Available browser cloaks |
+| GET/PUT | `/api/adminconsole/useragent/cloaked` | Browser cloaking of a device |
+| GET/PUT | `/api/adminconsole/webrtc`, `/referrer`, `/dnt` | Global anonymization settings |
+
+- Tokens are valid for one hour. The integration renews them five minutes before they expire and logs in again once on a 401. The `/api/device/pause/{id}` endpoints belong to the dashboard context and do **not** work with the admin token (HTTP 401), so the integration uses the admin pause route.
+- Filter switches read the current device object and write it back with the changed field, the same way the settings UI does.
+- The eBlocker assigns new IDs to built-in filter lists on every start. The integration therefore identifies them by type, category and name and reads the current ID before every write.
+- Users are created the same way as in the eBlocker UI: create the user, create an own profile `PROFILE_FOR_USER_<id>` (with the age template for children), assign the profile to the user. A custom profile without a user would be deleted by the eBlocker on its next restart.
+- The integration sends its own user agent (`HomeAssistant-eBlocker-Integration`). The eBlocker keys sessions by IP and user agent, and setting a browser cloak also changes the requesting session. This keeps the rest of Home Assistant's internet traffic unaffected.
+
+## Logos
+
+The integration ships its own logos (`custom_components/eblocker/brand/`). Home Assistant shows them automatically; no submission to the brands repository is needed:
+
+| File | Size | Used for |
+| --- | --- | --- |
+| `icon.png` / `icon@2x.png` | 256×256 / 512×512 | Icon (also in dark mode) |
+| `logo.png` / `logo@2x.png` | 532×128 / 1063×256 | Logo, light mode |
+| `dark_logo.png` / `dark_logo@2x.png` | 532×128 / 1063×256 | Logo with light text for dark mode |
+
+The original SVGs are in `assets/brand/`; the PNGs are rendered from them.
+
+## Development
+
+Home Assistant does not run natively on Windows, so the tests run on Linux/WSL:
+
+```bash
+python3 -m venv .venv && . .venv/bin/activate
+pip install -r requirements_test.txt ruff
+ruff check custom_components tests
+ruff format --check custom_components tests
+pytest
+```
+
+## License
+
+[MIT](LICENSE). eBlocker and the eBlocker logo are trademarks of their respective owners. This project is an independent community integration and is not affiliated with the eBlocker developers.
